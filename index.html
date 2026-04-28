@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>대성GO</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 상단 UI -->
+    <header class="game-header">
+        <div class="player-info" id="btnPlayerInfo" style="cursor: pointer;">
+            <span id="playerName">학생</span>
+            <span id="collectedCount">도감: 0/0</span>
+            <span id="itemCount">🎒: 30</span>
+        </div>
+    </header>
+
+    <!-- 지도 컨테이너 -->
+    <div id="map"></div>
+
+    <!-- 하단 메뉴 -->
+    <footer class="game-footer">
+        <button id="btnDex" class="btn-round">도감</button>
+        <button id="btnRecenter" class="btn-round">내 위치</button>
+    </footer>
+
+    <!-- 포획 화면 모달 -->
+    <div id="catchScreen" class="overlay hidden">
+        <button id="btnRun" class="btn-exit-catch">🏃 도망가기</button>
+        <div id="flashEffect"></div>
+
+        <!-- 3D 포획 필드 -->
+        <div id="catchField">
+            <!-- 랜덤 배경 -->
+            <div id="catch3dBg" class="catch3d-bg"></div>
+            <!-- 전설 이펙트 -->
+            <div id="legendaryBg" class="legendary-bg-wrapper"></div>
+
+            <div id="legendaryAlert" class="legendary-alert">⚠️ 전설의 선생님 등장! ⚠️</div>
+
+            <!-- 선생님 (3D 공간 중앙 상단에 위치) -->
+            <div id="catch3d-target-wrap">
+                <div id="targetSprite" class="sprite"></div>
+                <div id="targetName3d" class="catch3d-name"></div>
+            </div>
+
+            <!-- 이름 + 아이템 정보 -->
+            <div class="catch3d-hud">
+                <div class="catch3d-hud-name">야생의 <span id="targetName">선생님</span>(이)가 나타났다!</div>
+                <div class="catch3d-hud-item">아이템: <span id="hudItemName">커피</span> <span id="hudItemIcon">☕</span></div>
+            </div>
+
+            <!-- 볼 궤적 캔버스 (투명 오버레이) -->
+            <canvas id="throwCanvas"></canvas>
+
+            <!-- 던질 아이템 (하단 중앙) -->
+            <div id="throwItem" class="throw-item-3d"></div>
+
+            <!-- 안내 문구 -->
+            <div class="catch3d-instruction">↑ 위로 스와이프하여 던지기!</div>
+
+            <!-- 결과 텍스트 오버레이 -->
+            <div id="catch3d-result" class="catch3d-result"></div>
+        </div>
+    </div>
+
+    <!-- 도감 화면 모달 -->
+    <div id="dexScreen" class="overlay hidden">
+        <div class="dex-header">
+            <h2>대성 선생님 도감</h2>
+            <button id="btnDexClose" class="btn-rectangle">닫기</button>
+        </div>
+        <div id="dexGrid" class="dex-grid">
+            <!-- 자바스크립트로 생성됨 -->
+        </div>
+    </div>
+
+    <!-- 플레이어 정보 모달 -->
+    <div id="infoScreen" class="overlay hidden" style="z-index:3000;">
+        <div class="info-box">
+            <h2>내 정보</h2>
+            <div class="info-content">
+                <div class="info-item">
+                    <span class="label">이름</span>
+                    <span id="infoPlayerName" class="value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">수집 현황</span>
+                    <span id="infoCollectedCount" class="value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">보유 아이템</span>
+                    <span id="infoItemCount" class="value">-</span>
+                </div>
+            </div>
+            <button id="btnSubmitResult" class="btn-rectangle primary" style="background:#2ecc71; margin-bottom: 10px;">게임 결과 전송 (구글 설문지)</button>
+            <button id="btnReset" class="btn-rectangle danger" style="margin-bottom: 10px;">데이터 초기화</button>
+            <button id="btnInfoClose" class="btn-rectangle">닫기</button>
+        </div>
+    </div>
+
+    <!-- 초기 이름 설정 화면 모달 -->
+    <div id="loginScreen" class="overlay">
+        <div class="login-box">
+            <h1>대성GO</h1>
+            <p>환영합니다! 정보를 입력하세요.</p>
+            <input type="number" id="inputPlayerId" placeholder="학번 (예: 10101)" maxlength="5">
+            <input type="text" id="inputPlayerName" placeholder="이름" maxlength="10">
+            <button id="btnStart" class="btn-rectangle primary">시작하기</button>
+        </div>
+    </div>
+
+    <!-- 인트로 스토리 화면 -->
+    <div id="introScreen" class="overlay hidden">
+        <div id="introBg" class="intro-bg"></div>
+        <div id="introCharacter" class="intro-character">
+            <img src="img/student_avatar.png?v=3" alt="Student">
+        </div>
+        <div class="dialogue-box">
+            <div class="dialogue-name" id="dialogueName">학생</div>
+            <div class="dialogue-text" id="dialogueText">...</div>
+            <div class="dialogue-next">▼ 터치하여 계속</div>
+        </div>
+    </div>
+
+    <!-- 커스텀 결과 알림 모달 -->
+    <div id="resultModal" class="overlay hidden" style="z-index: 5000;">
+        <div class="result-box">
+            <div id="resultIcon" class="result-icon">✨</div>
+            <h2 id="resultTitle">포획 성공!</h2>
+            <p id="resultMsg">선생님을 도감에 등록했습니다.</p>
+            <button id="btnResultClose" class="btn-rectangle primary">확인</button>
+        </div>
+    </div>
+
+    <!-- 아이템 획득 알림 -->
+    <div id="itemReward" class="item-reward-overlay hidden">
+        <div class="reward-content">
+            <div class="reward-icon">🎒</div>
+            <div class="reward-text">+10 Items</div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- App Scripts (v=버전 숫자를 올리면 캐시 무시하고 최신 파일 로드됨) -->
+    <script src="js/data.js?v=2"></script>
+    <script src="js/storage.js?v=2"></script>
+    <script src="js/catch.js?v=2"></script>
+    <script src="js/map.js?v=8"></script>
+    <script src="js/app.js?v=4"></script>
+</body>
+</html>

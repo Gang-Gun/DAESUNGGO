@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대성GO 관리자 대시보드</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00b894;
+            --bg: #f8f9fa;
+            --dark: #1a1a2e;
+            --danger: #d63031;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--dark);
+            color: white;
+            display: flex;
+            padding: 10px 30px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #a29bfe;
+            border: none;
+            padding: 12px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Container */
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* 지도 탭은 패딩 없이 꽉 채움 */
+        #tab-map {
+            padding: 0;
+        }
+
+        /* 지도 탭 내부 컨테이너 */
+        #map-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 관리자 지도 영역 */
+        #tab-map #map {
+            flex: 1;
+            height: 100%;
+            min-height: 400px;
+        }
+
+        /* DB Panel */
+        .db-container {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .db-form-panel {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .db-list-panel {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 24px;
+            flex: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        h3 {
+            margin-top: 0;
+            font-weight: 800;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #636e72;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #f1f3f5;
+            border-radius: 14px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            transition: 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: white;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            transition: 0.3s;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        button.danger {
+            background: var(--danger);
+            width: auto;
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .teacher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .teacher-card {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            background: white;
+        }
+
+        .teacher-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 24px;
+            margin-bottom: 15px;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Sidebar Map */
+        #sidebar {
+            width: 350px;
+            background: white;
+            padding: 30px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #eee;
+        }
+
+        /* Export */
+        .export-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        textarea#exportArea {
+            flex: 1;
+            min-height: 450px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #eee;
+            resize: none;
+            background: #2d3436;
+            color: #00b894;
+        }
+
+        /* Rarity Styles */
+        .rarity-rare { border: 3px solid #a29bfe !important; }
+        .rarity-legendary { border: 4px solid #fdcb6e !important; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <h2>대성GO 관리자</h2>
+        <div class="tabs">
+            <button class="tab-btn active" data-target="tab-db">1. 선생님 설정</button>
+            <button class="tab-btn" data-target="tab-map">2. 지도 배치</button>
+            <button class="tab-btn" data-target="tab-export">3. 데이터 내보내기</button>
+        </div>
+    </nav>
+
+    <!-- Tab 1: 선생님 데이터 관리 -->
+    <div id="tab-db" class="tab-content active">
+        <div class="db-container">
+            <div class="db-form-panel">
+                <h3>새 선생님 추가</h3>
+                <div class="form-group">
+                    <label>이름</label>
+                    <input type="text" id="tName" placeholder="예: 김대성 선생님">
+                </div>
+                <div class="form-group">
+                    <label>타입 (속성)</label>
+                    <input type="text" id="tType" placeholder="예: 무서움 / 수학 / 불속성">
+                </div>
+                <div class="form-group">
+                    <label>캐릭터 이미지 파일 (선택)</label>
+                    <input type="file" id="tImageFile" accept="image/*">
+                    <img id="tImagePreview" class="preview-img">
+                </div>
+                <div class="form-group">
+                    <label>소개 멘트 (도감에 표시됨)</label>
+                    <textarea id="tDesc" rows="2" placeholder="너희들의 성적을 구원하러 왔다!"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>발견 장소 힌트</label>
+                    <input type="text" id="tFoundAt" placeholder="예: 1구간 바람숲길">
+                </div>
+                <div class="form-group">
+                    <label>선생님이 선호하는 아이템 (포획률 +5%)</label>
+                    <select id="tPreferredItem">
+                        <option value="">없음</option>
+                        <option value="커피">커피</option>
+                        <option value="컴퓨터용 사인펜">컴퓨터용 사인펜</option>
+                        <option value="빵점짜리 시험지">빵점짜리 시험지(!?)</option>
+                        <option value="교무 수첩">교무 수첩</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>선생님 등장 등급 (특수 이펙트)</label>
+                    <select id="tRarity">
+                        <option value="normal">일반 (기본)</option>
+                        <option value="rare" style="color: purple; font-weight: bold;">레어 (보라색 오라)</option>
+                        <option value="legendary" style="color: rgb(183, 180, 174); font-weight: bold;">전설 (황금 폭발 이펙트)
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>포획 난이도 (기본 확률) : <span id="tProbLabel">50%</span></label>
+                    <input type="range" id="tBaseProb" min="10" max="90" value="50" style="width: 100%;">
+                    <small style="color:gray;">높을수록 아이템 없이도 잘 잡힙니다. (어렵게 하려면 수치를 낮추세요)</small>
+                </div>
+                <button id="btnAddTeacher">선생님 추가하기</button>
+            </div>
+            <div class="db-list-panel">
+                <h3>등록된 선생님 목록</h3>
+                <div id="teacherGrid" class="teacher-grid">
+                    <!-- 자바스크립트로 생성됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 2: 지도 배치 -->
+    <div id="tab-map" class="tab-content">
+        <div id="map-container">
+            <div id="map"></div>
+            <div id="sidebar">
+                <h3>스폰 설정</h3>
+                <p style="font-size: 13px; color: #555;">먼저 속성을 선택하고 지도에 클릭하세요.</p>
+
+                <div class="form-group">
+                    <label>설치할 종류</label>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <label><input type="radio" name="spawnType" value="teacher" checked> 선생님</label>
+                        <label><input type="radio" name="spawnType" value="pokestop"> 포켓스탑</label>
+                    </div>
+                </div>
+
+                <div id="teacherSelectBlock" class="form-group">
+                    <label>선생님 선택</label>
+                    <select id="mapTeacherSelect" style="width:100%; padding:8px;">
+                        <!-- db에서 연동됨 -->
+                    </select>
+                </div>
+
+                <div id="pokestopNameBlock" class="form-group" style="display:none;">
+                    <label>포켓스탑 이름</label>
+                    <input type="text" id="mapPokestopName" value="포켓스탑"
+                        style="width:100%; padding:8px; box-sizing:border-box;">
+                </div>
+
+                <hr style="margin:20px 0;">
+                <h4>배치된 마커 (<span id="markerCount">0</span>)</h4>
+                <div id="locationList" style="flex:1; overflow-y:auto; font-size:13px; margin-bottom:10px;"></div>
+                <button id="btnClearMap" style="background:#e74c3c;">지도 초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 3: 내보내기 -->
+    <div id="tab-export" class="tab-content">
+        <div class="export-container">
+            <h3>최종 데이터 코드 생성</h3>
+            <p>1단계, 2단계에서 작업한 내용을 실제 게임 코드 파일(<code>js/data.js</code>)에 적용하기 위한 텍스트 코드를 생성합니다.</p>
+            <button id="btnGenerateCode" style="height: 50px; font-size: 18px;">전체 코드 생성 및 복사하기</button>
+            <textarea id="exportArea" readonly placeholder="버튼을 누르면 여기에 데이터 코드가 출력됩니다."></textarea>
+            <p style="color: var(--danger-color); font-weight: bold;">⚠️ 생성된 코드를 복사하여 내 드라이브 폴더 안에 있는
+                <code>js/data.js</code> 파일 안의 내용을 전부 지우고 덮어쓰기 하세요.
+            </p>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/data.js?v=2"></script>
+    <script src="js/admin.js?v=3"></script>
+</body>
+
+</html>
