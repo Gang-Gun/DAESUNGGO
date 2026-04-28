@@ -1,11 +1,3 @@
-대성GO 관리자
-1. 선생님 설정
-2. 지도 배치
-3. 데이터 내보내기
-최종 데이터 코드 생성
-1단계, 2단계에서 작업한 내용을 실제 게임 코드 파일(js/data.js)에 적용하기 위한 텍스트 코드를 생성합니다.
-
-전체 코드 생성 및 복사하기
 // ==== js/data.js (생성된 코드 전체 덮어쓰기) ==== 
 
 const TEACHERS_DB = [
@@ -25,7 +17,7 @@ const TEACHERS_DB = [
         "name": "박부희",
         "type": "지구과학",
         "desc": "2학년 1반 담임\n봉인해제!",
-        "foundAt": "2구간",
+        "foundAt": "휴식지1",
         "baseProb": 0.25,
         "preferredItem": "교무 수첩",
         "rarity": "rare",
@@ -36,7 +28,7 @@ const TEACHERS_DB = [
         "name": "김승남",
         "type": "생물",
         "desc": "2학년 4반 담임\n얘들아 영어단어 시험 봐야지~",
-        "foundAt": "1구간",
+        "foundAt": "휴식지1",
         "baseProb": 0.5,
         "preferredItem": "컴퓨터용 사인펜",
         "rarity": "normal",
@@ -47,7 +39,7 @@ const TEACHERS_DB = [
         "name": "유성희",
         "type": "수학",
         "desc": "2학년 3반 담임\n우리반 애기들~",
-        "foundAt": "1구간",
+        "foundAt": "휴식지2",
         "baseProb": 0.5,
         "preferredItem": "커피",
         "rarity": "normal",
@@ -58,7 +50,7 @@ const TEACHERS_DB = [
         "name": "김민정",
         "type": "영어",
         "desc": "2학년 2반 담임\n안녕? 예쁜이들아~",
-        "foundAt": "1구간",
+        "foundAt": "휴식지1",
         "baseProb": 0.5,
         "preferredItem": "컴퓨터용 사인펜",
         "rarity": "normal",
@@ -69,7 +61,7 @@ const TEACHERS_DB = [
         "name": "이호용",
         "type": "마법(물리)",
         "desc": "과학부장\n과학의 왕",
-        "foundAt": "1구간",
+        "foundAt": "휴식지2",
         "baseProb": 0.25,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "rare",
@@ -80,7 +72,7 @@ const TEACHERS_DB = [
         "name": "권혁철",
         "type": "국어",
         "desc": "미래정보부\n작년 1학년 5반 모여라",
-        "foundAt": "1구간",
+        "foundAt": "휴식지2",
         "baseProb": 0.5,
         "preferredItem": "교무 수첩",
         "rarity": "normal",
@@ -102,7 +94,7 @@ const TEACHERS_DB = [
         "name": "이승은",
         "type": "영어",
         "desc": "2학년 6반 담임\n대성 최고 미녀!",
-        "foundAt": "2구간",
+        "foundAt": "휴식지3",
         "baseProb": 0.5,
         "preferredItem": "교무 수첩",
         "rarity": "normal",
@@ -113,7 +105,7 @@ const TEACHERS_DB = [
         "name": "박탄",
         "type": "국어",
         "desc": "2학년 7반 담임\n대성중을 접수하고 이제는 대성고로!",
-        "foundAt": "2구간",
+        "foundAt": "휴식지3",
         "baseProb": 0.5,
         "preferredItem": "커피",
         "rarity": "normal",
@@ -124,7 +116,7 @@ const TEACHERS_DB = [
         "name": "이정북",
         "type": "국어",
         "desc": "2학년 5반 담임\n도와주세요",
-        "foundAt": "2구간",
+        "foundAt": "휴식지4",
         "baseProb": 0.5,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "normal",
@@ -135,7 +127,7 @@ const TEACHERS_DB = [
         "name": "전영빈",
         "type": "지리",
         "desc": "교무기획부\n3대 500",
-        "foundAt": "2구간",
+        "foundAt": "휴식지4",
         "baseProb": 0.5,
         "preferredItem": "커피",
         "rarity": "normal",
@@ -146,7 +138,7 @@ const TEACHERS_DB = [
         "name": "전계원",
         "type": "영어",
         "desc": "학생부\n영어를 잘 하고 싶나요?!",
-        "foundAt": "2구간",
+        "foundAt": "휴식지5",
         "baseProb": 0.5,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "normal",
@@ -157,7 +149,7 @@ const TEACHERS_DB = [
         "name": "강보배",
         "type": "수학",
         "desc": "창의인성부장\n봉사의 왕",
-        "foundAt": "3구간",
+        "foundAt": "휴식지3",
         "baseProb": 0.25,
         "preferredItem": "커피",
         "rarity": "rare",
@@ -168,7 +160,7 @@ const TEACHERS_DB = [
         "name": "전병욱",
         "type": "체육",
         "desc": "체육예능부\n잘생겼는데 축구까지 잘하시면....",
-        "foundAt": "3구간",
+        "foundAt": "휴식지6",
         "baseProb": 0.5,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "normal",
@@ -179,7 +171,7 @@ const TEACHERS_DB = [
         "name": "임민희",
         "type": "일본어",
         "desc": "학생부장\n선도의 왕",
-        "foundAt": "3구간",
+        "foundAt": "휴식지4",
         "baseProb": 0.25,
         "preferredItem": "교무 수첩",
         "rarity": "rare",
@@ -190,7 +182,7 @@ const TEACHERS_DB = [
         "name": "이상훈",
         "type": "수학",
         "desc": "교무부장\nㅇㄱㅈㅉㅇㅇ?",
-        "foundAt": "3구간",
+        "foundAt": "휴식지5",
         "baseProb": 0.25,
         "preferredItem": "컴퓨터용 사인펜",
         "rarity": "rare",
@@ -201,7 +193,7 @@ const TEACHERS_DB = [
         "name": "우희태",
         "type": "역사",
         "desc": "2학년 8반 담임\nDS레인져스 변신!!!",
-        "foundAt": "3구간",
+        "foundAt": "휴식지5",
         "baseProb": 0.5,
         "preferredItem": "컴퓨터용 사인펜",
         "rarity": "normal",
@@ -212,7 +204,7 @@ const TEACHERS_DB = [
         "name": "박수현",
         "type": "정보",
         "desc": "2학년 9반 담임\n선생님은 사람을 찢을 수도 있어요~",
-        "foundAt": "3구간",
+        "foundAt": "휴식지6",
         "baseProb": 0.5,
         "preferredItem": "커피",
         "rarity": "normal",
@@ -234,7 +226,7 @@ const TEACHERS_DB = [
         "name": "이효진",
         "type": "수학",
         "desc": "미래정보부장\n전자기기의 왕",
-        "foundAt": "3구간",
+        "foundAt": "휴식지6",
         "baseProb": 0.25,
         "preferredItem": "교무 수첩",
         "rarity": "rare",
@@ -245,7 +237,7 @@ const TEACHERS_DB = [
         "name": "원동진",
         "type": "화학",
         "desc": "연구진학부장\n야자의 왕",
-        "foundAt": "3구간",
+        "foundAt": "휴식지6",
         "baseProb": 0.25,
         "preferredItem": "컴퓨터용 사인펜",
         "rarity": "rare",
@@ -256,7 +248,7 @@ const TEACHERS_DB = [
         "name": "이용환",
         "type": "생물",
         "desc": "융합과학부\n도마뱀과 함께하는 남자",
-        "foundAt": "3구간",
+        "foundAt": "휴식지2",
         "baseProb": 0.5,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "normal",
@@ -266,8 +258,8 @@ const TEACHERS_DB = [
         "id": 30,
         "name": "추현호",
         "type": "국어",
-        "desc": "연구진학부\n사진은 실물과 차이가 있음",
-        "foundAt": "3구간",
+        "desc": "연구진학부\n사진은 실물과.......",
+        "foundAt": "휴식지1",
         "baseProb": 0.5,
         "preferredItem": "빵점짜리 시험지",
         "rarity": "normal",
@@ -628,6 +620,11 @@ let SPAWN_LOCATIONS = [
         "teacherId": 28
     },
     {
+        "lat": 37.324993,
+        "lng": 127.931328,
+        "teacherId": 28
+    },
+    {
         "lat": 37.325339,
         "lng": 127.93096,
         "teacherId": 27
@@ -771,61 +768,6 @@ let SPAWN_LOCATIONS = [
         "lat": 37.328417,
         "lng": 127.946126,
         "teacherId": 10
-    },
-    {
-        "lat": 37.323857,
-        "lng": 127.931907,
-        "teacherId": 28
-    },
-    {
-        "lat": 37.323831,
-        "lng": 127.932739,
-        "teacherId": 25
-    },
-    {
-        "lat": 37.323264,
-        "lng": 127.931821,
-        "teacherId": 25
-    },
-    {
-        "lat": 37.323503,
-        "lng": 127.932562,
-        "teacherId": 25
-    },
-    {
-        "lat": 37.324582,
-        "lng": 127.932846,
-        "teacherId": 25
-    },
-    {
-        "lat": 37.324015,
-        "lng": 127.933007,
-        "teacherId": 21
-    },
-    {
-        "lat": 37.323682,
-        "lng": 127.932122,
-        "teacherId": 21
-    },
-    {
-        "lat": 37.323592,
-        "lng": 127.933098,
-        "teacherId": 21
-    },
-    {
-        "lat": 37.324027,
-        "lng": 127.932492,
-        "teacherId": 21
-    },
-    {
-        "lat": 37.324087,
-        "lng": 127.932728,
-        "teacherId": 27
-    },
-    {
-        "lat": 37.345458,
-        "lng": 128.006945,
-        "teacherId": 27
     }
 ];
 
@@ -939,16 +881,16 @@ let POKESTOP_LOCATIONS = [
         "lng": 127.998514
     },
     {
+        "id": 1777354356939,
+        "name": "포켓스탑",
+        "lat": 37.325196,
+        "lng": 127.931153
+    },
+    {
         "id": 1777354360423,
         "name": "포켓스탑",
         "lat": 37.323876,
         "lng": 127.930558
-    },
-    {
-        "id": 1777375194141,
-        "name": "포켓스탑",
-        "lat": 37.324305,
-        "lng": 127.932615
     }
 ];
 
@@ -956,5 +898,3 @@ let POKESTOP_LOCATIONS = [
 function getTeacherById(id) {
     return TEACHERS_DB.find(t => t.id === parseInt(id));
 }
-
-⚠️ 생성된 코드를 복사하여 내 드라이브 폴더 안에 있는 js/data.js 파일 안의 내용을 전부 지우고 덮어쓰기 하세요.
